@@ -168,6 +168,7 @@ module.exports = {
       ...env.stringified,
     }),
     new HtmlWebpackPlugin({
+      title: 'Список задач',
       inject: false,
       template: `${src}/index.html`,
       ...(isProduction
