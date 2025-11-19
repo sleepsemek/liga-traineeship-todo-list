@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from "../store";
+import { store } from '../store';
 import { TasksPage } from 'pages/TasksPage/TasksPage';
 import { PageContainer } from 'src/pages/PageContainer';
 import { NotFoundPage } from 'pages/NotFoundPage';
