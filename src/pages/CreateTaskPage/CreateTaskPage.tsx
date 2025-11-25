@@ -1,27 +1,43 @@
+import { Card, CardContent, IconButton, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Task } from '../../domain/task/task';
+import { mapCreateTaskToRequest } from '../../domain/task';
+import { TaskForm } from 'components/blocks/TaskForm';
+import { useCreateTaskMutation } from 'api/client';
+
 export function CreateTaskPage() {
+  const navigate = useNavigate();
+  const [createTask] = useCreateTaskMutation();
+
+  const handleSubmit = async (form: Partial<Task>) => {
+    const body = mapCreateTaskToRequest({
+      title: form.title ?? '',
+      description: form.description ?? '',
+      isImportant: form.isImportant ?? false,
+      isCompleted: form.isCompleted ?? false,
+    });
+    await createTask(body).unwrap();
+    navigate('/');
+  };
+
+  const handleBack = () => navigate(-1);
+
   return (
-    <section aria-labelledby="create-task-header" className="section">
-      <h2 id="create-task-header">Создать задачу</h2>
-      <form className="create-task-form">
-        <label className="create-task-form__label label">
-          Название задачи
-          <input type="text" name="name" className="create-task__form-input input" required />
-        </label>
+    <Card variant="outlined">
+      <CardContent>
+        <Stack spacing={3}>
+          <Stack direction="row" spacing={2}>
+            <IconButton onClick={handleBack} aria-label="Назад">
+              <ArrowBackIcon />
+            </IconButton>
+          </Stack>
 
-        <label className="create-task-form__label label">
-          Описание задачи
-          <textarea name="info" className="create-task-form__input input" required></textarea>
-        </label>
+          <Typography variant="h1">Создание задачи</Typography>
 
-        <label className="create-task-form__label label label--inline">
-          <input type="checkbox" name="isImportant" className="create-task-form__input input" />
-          Важная?
-        </label>
-
-        <button type="submit" className="create-task-form__button button">
-          Создать задачу
-        </button>
-      </form>
-    </section>
+          <TaskForm initial={{}} submitLabel="Создать задачу" onSubmit={handleSubmit} />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

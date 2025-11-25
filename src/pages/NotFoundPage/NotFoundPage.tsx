@@ -1,3 +1,9 @@
+import { Typography } from '@mui/material';
+
 export function NotFoundPage() {
-  return <h2>Такой страницы нет</h2>;
+  return (
+    <Typography variant="h1" align="center">
+      Такой страницы нет
+    </Typography>
+  );
 }

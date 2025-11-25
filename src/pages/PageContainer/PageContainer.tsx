@@ -1,12 +1,11 @@
 import React from 'react';
-import './PageContainer.css';
+import { Box, Container } from '@mui/material';
 import { PageContainerProps } from './PageContainer.types';
 
-export function PageContainer({ children, className = '' }: PageContainerProps) {
+export function PageContainer({ children }: PageContainerProps) {
   return (
-    <div className={`container ${className}`}>
-      <h1 className="title">Задачи</h1>
-      <main>{children}</main>
-    </div>
+    <Box py={4} component="main">
+      <Container maxWidth="sm">{children}</Container>
+    </Box>
   );
 }

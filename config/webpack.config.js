@@ -166,6 +166,7 @@ module.exports = {
       PRODUCTION: isProduction,
       TEST: isTest,
       ...env.stringified,
+      'process.env.API_URL': JSON.stringify(process.env.API_URL),
     }),
     new HtmlWebpackPlugin({
       title: 'Список задач',

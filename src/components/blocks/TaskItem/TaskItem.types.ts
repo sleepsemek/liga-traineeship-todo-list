@@ -1,4 +1,4 @@
-import { Task } from 'types/Task';
+import { Task } from '../../../domain/task/task';
 
 export interface TaskItemProps {
   task: Task;

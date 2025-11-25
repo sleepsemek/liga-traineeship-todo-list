@@ -1,35 +1,41 @@
+import { Card, CardContent, Typography, Stack, Chip, CardActions, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { TaskItemProps } from 'components/blocks/TaskItem/TaskItem.types';
+import { useDeleteTaskMutation } from 'api/client';
 
 export function TaskItem({ task }: TaskItemProps) {
-  const { name, info, isImportant, isCompleted } = task;
-  return (
-    <li className="task">
-      <h3 className="task__title">{name}</h3>
-      <p className="task__description">{info}</p>
+  const { id, title, description, isImportant, isCompleted } = task;
 
-      <div className="task__controls">
-        <label className="task__controls-label label label--inline">
-          <input
-            className="task__controls-input input"
-            type="checkbox"
-            aria-label={`Пометить задачу ${name} как важную`}
-            checked={isImportant}
-          />
-          Важная
-        </label>
-        <label className="task__controls-label label label--inline">
-          <input
-            className="task__controls-input input"
-            type="checkbox"
-            aria-label={`Пометить задачу ${name} как завершенную`}
-            checked={isCompleted}
-          />
-          Выполнена
-        </label>
-      </div>
-      <button className="task__controls-button button" type="button" aria-label="Удалить задачу '${name}'">
-        Удалить
-      </button>
-    </li>
+  const navigate = useNavigate();
+  const [deleteTask] = useDeleteTaskMutation();
+
+  const onEditClick = () => navigate(`/task_form/${id}`);
+  const onDeleteClick = () => {
+    if (id) deleteTask({ id });
+  };
+
+  return (
+    <Card component="article" variant="outlined">
+      <CardContent>
+        <Stack spacing={1}>
+          <Typography component="h3" variant="h6">
+            {title}
+          </Typography>
+          <Stack direction="row" spacing={1}>
+            {isImportant && <Chip size="small" label="Важная" />}
+            {isCompleted && <Chip size="small" label="Выполнена" />}
+          </Stack>
+          <Typography variant="body2">{description}</Typography>
+        </Stack>
+      </CardContent>
+      <CardActions>
+        <Button onClick={onEditClick} variant="contained">
+          Изменить
+        </Button>
+        <Button onClick={onDeleteClick} color="error">
+          Удалить
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
