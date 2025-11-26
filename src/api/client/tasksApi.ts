@@ -62,7 +62,7 @@ export const tasksApi = baseApi.injectEndpoints({
         method: 'DELETE',
       }),
       transformResponse: (api: DeleteTaskResponse) => mapTaskResponseToTask(api),
-      invalidatesTags: (_, __, arg) => [{ type: 'Tasks', id: arg.id }, 'Tasks'],
+      invalidatesTags: ['Tasks'],
     }),
   }),
   overrideExisting: false,

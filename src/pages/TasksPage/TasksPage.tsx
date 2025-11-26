@@ -9,7 +9,7 @@ import { TaskFilterParams } from 'src/domain/task/task';
 export function TasksPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const parseTriState = (value: string | null): boolean | undefined => {
+  const parseFilterStateFromParam = (value: string | null): boolean | undefined => {
     if (value === 'true') return true;
     if (value === 'false') return false;
     return undefined;
@@ -17,8 +17,8 @@ export function TasksPage() {
 
   const filters: TaskFilterParams = {
     searchQuery: searchParams.get('search') ?? undefined,
-    onlyImportant: parseTriState(searchParams.get('important')),
-    onlyCompleted: parseTriState(searchParams.get('completed')),
+    onlyImportant: parseFilterStateFromParam(searchParams.get('important')),
+    onlyCompleted: parseFilterStateFromParam(searchParams.get('completed')),
   };
 
   const onFiltersChange = (newParams: TaskFilterParams) => {
@@ -69,7 +69,7 @@ export function TasksPage() {
 
       {!isLoading && !isError && <TaskList tasks={data ?? []} />}
 
-      <Box position="sticky" bottom={24} display="flex" justifyContent="flex-end" width="100%">
+      <Box position="sticky" bottom={24} display="flex" justifyContent="flex-end" width="100%" px={3}>
         <Fab color="primary" aria-label="Создать задачу" onClick={onFabClick}>
           <AddIcon />
         </Fab>

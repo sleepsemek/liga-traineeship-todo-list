@@ -1,63 +1,90 @@
-import { FormEvent, useState } from 'react';
+import { useMemo } from 'react';
 import { Box, Button, FormControlLabel, Stack, Switch, TextField } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { TaskFormProps } from './TaskForm.types';
 import { Task } from 'src/domain/task/task';
+import { taskFormSchema } from 'components/blocks/TaskForm/TaskForm.schema';
 
 export function TaskForm({ initial, onSubmit, submitLabel = 'Сохранить' }: TaskFormProps) {
-  const [form, setForm] = useState<Partial<Task>>({
-    title: initial.title ?? '',
-    description: initial.description ?? '',
-    isImportant: initial.isImportant ?? false,
-    isCompleted: initial.isCompleted ?? false,
+  const defaultValues = useMemo(
+    () => ({
+      title: initial.title ?? '',
+      description: initial.description ?? '',
+      isImportant: initial.isImportant ?? false,
+      isCompleted: initial.isCompleted ?? false,
+    }),
+    [initial]
+  );
+
+  const { control, handleSubmit, watch } = useForm<Partial<Task>>({
+    defaultValues,
+    resolver: yupResolver(taskFormSchema),
   });
 
-  const partiallySetForm = (partial: Partial<Task>) => setForm((prev) => ({ ...prev, ...partial }));
-
-  const handleSubmit = (formEvent: FormEvent) => {
-    formEvent.preventDefault();
-    onSubmit(form);
-  };
+  const completedValue = watch('isCompleted');
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        <TextField
-          label="Название задачи"
-          variant="filled"
-          required
-          value={form.title}
-          onChange={(e) => partiallySetForm({ title: e.target.value })}
+        <Controller
+          name="title"
+          control={control}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              label="Название задачи"
+              variant="filled"
+              error={Boolean(fieldState.error)}
+              helperText={fieldState.error?.message}
+            />
+          )}
         />
 
-        <TextField
-          label="Описание задачи"
-          variant="filled"
-          required
-          multiline
-          minRows={3}
-          value={form.description}
-          onChange={(e) => partiallySetForm({ description: e.target.value })}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              label="Описание задачи"
+              variant="filled"
+              multiline
+              minRows={3}
+              error={Boolean(fieldState.error)}
+              helperText={fieldState.error?.message}
+            />
+          )}
         />
 
         <Stack direction="row" flexWrap="wrap">
-          <FormControlLabel
-            control={
-              <Switch
-                checked={form.isImportant}
-                onChange={(_, checked) => partiallySetForm({ isImportant: checked })}
+          <Controller
+            name="isImportant"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Switch
+                    {...field}
+                    checked={field.value}
+                    disabled={completedValue}
+                    onChange={(_, checked) => field.onChange(checked)}
+                  />
+                }
+                label="Важная"
               />
-            }
-            label="Важная"
+            )}
           />
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={form.isCompleted}
-                onChange={(_, checked) => partiallySetForm({ isCompleted: checked })}
+          <Controller
+            name="isCompleted"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={<Switch {...field} checked={field.value} onChange={(_, checked) => field.onChange(checked)} />}
+                label="Выполнена"
               />
-            }
-            label="Выполнена"
+            )}
           />
         </Stack>
 

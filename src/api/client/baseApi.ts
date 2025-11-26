@@ -5,6 +5,8 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.API_URL,
   }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
   tagTypes: ['Tasks'],
   endpoints: () => ({}),
 });

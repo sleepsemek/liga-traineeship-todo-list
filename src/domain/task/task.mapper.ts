@@ -1,5 +1,5 @@
 import { CreateTask, EditTask, Task, TaskFilterParams } from './task';
-import { CreateTaskRequest, EditTaskRequest, GetTaskResponse } from 'api/models/task.types';
+import { CreateTaskRequest, EditTaskRequest, GetTaskResponse, GetTasksQuery } from 'api/models/task.types';
 
 export const mapTaskResponseToTask = (api: GetTaskResponse): Task => ({
   id: api.id,
@@ -23,7 +23,7 @@ export const mapEditTaskToRequest = (task: EditTask): EditTaskRequest => ({
   isCompleted: task.isCompleted,
 });
 
-export const mapTaskFilterParamsToRequest = (filters: TaskFilterParams) => ({
+export const mapTaskFilterParamsToRequest = (filters: TaskFilterParams): GetTasksQuery => ({
   name_like: filters.searchQuery ? filters.searchQuery : undefined,
   isImportant: filters.onlyImportant,
   isCompleted: filters.onlyCompleted,
