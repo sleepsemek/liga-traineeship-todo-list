@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { Box, Button, FormControlLabel, Stack, Switch, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, FormControlLabel, Stack, Switch, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TaskFormProps } from './TaskForm.types';
 import { Task } from 'src/domain/task/task';
 import { taskFormSchema } from 'components/blocks/TaskForm/TaskForm.schema';
 
-export function TaskForm({ initial, onSubmit, submitLabel = 'Сохранить' }: TaskFormProps) {
+export function TaskForm({ initial, onSubmit, submitLabel = 'Сохранить', isLoading = false }: TaskFormProps) {
   const defaultValues = useMemo(
     () => ({
       title: initial.title ?? '',
@@ -89,8 +89,8 @@ export function TaskForm({ initial, onSubmit, submitLabel = 'Сохранить'
         </Stack>
 
         <Box display="flex" justifyContent="flex-end">
-          <Button variant="contained" type="submit">
-            {submitLabel}
+          <Button variant="contained" type="submit" disabled={isLoading}>
+            {isLoading ? <CircularProgress size={24} /> : submitLabel}
           </Button>
         </Box>
       </Stack>

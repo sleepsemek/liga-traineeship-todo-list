@@ -1,9 +1,10 @@
-import { Stack, Typography, CircularProgress, IconButton, Card, CardContent } from '@mui/material';
+import { Stack, Typography, IconButton, Card, CardContent } from '@mui/material';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEditTaskMutation, useGetTaskQuery } from 'api/client';
 import { TaskForm } from 'components/blocks/TaskForm';
 import { mapEditTaskToRequest } from 'src/domain/task';
+import { ErrorSnackbar } from 'components/ui/ErrorSnackbar/ErrorSnackbar';
 
 export function EditTaskPage() {
   const { id } = useParams();
@@ -13,18 +14,14 @@ export function EditTaskPage() {
     return <Navigate to="/" replace />;
   }
 
-  const { data, isLoading, isError } = useGetTaskQuery(id);
-  const [editTask] = useEditTaskMutation();
+  const { data, isLoading: isFetchLoading, isError: isFetchError } = useGetTaskQuery(id);
+  const [editTask, { isError: isEditError, isLoading: isEditLoading }] = useEditTaskMutation();
 
-  if (isLoading) {
-    return (
-      <Stack alignItems="center" paddingTop={4}>
-        <CircularProgress />
-      </Stack>
-    );
+  if (isFetchLoading) {
+    return null; //TODO: fix
   }
 
-  if (isError || !data) {
+  if (isFetchError || !data) {
     return <Navigate to="/404" replace />;
   }
 
@@ -54,9 +51,15 @@ export function EditTaskPage() {
 
           <Typography variant="h1">Редактирование задачи</Typography>
 
-          <TaskForm initial={data} submitLabel="Обновить" onSubmit={handleSubmit} />
+          <TaskForm
+            initial={data}
+            submitLabel="Обновить"
+            onSubmit={handleSubmit}
+            isLoading={isFetchLoading || isEditLoading}
+          />
         </Stack>
       </CardContent>
+      {isEditError && <ErrorSnackbar message="Ошибка при изменении задачи" />}
     </Card>
   );
 }

@@ -19,13 +19,13 @@ export function TaskItem({ task }: TaskItemProps) {
       <CardContent>
         <Stack spacing={1}>
           <Typography component="h3" variant="h6">
-            {title}
+            {title || 'Без названия'}
           </Typography>
           <Stack direction="row" spacing={1}>
             {isImportant && <Chip size="small" label="Важная" />}
             {isCompleted && <Chip size="small" label="Выполнена" />}
           </Stack>
-          <Typography variant="body2">{description}</Typography>
+          <Typography variant="body2">{description || 'Без описания'}</Typography>
         </Stack>
       </CardContent>
       <CardActions>

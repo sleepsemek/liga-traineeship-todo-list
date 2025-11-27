@@ -5,6 +5,7 @@ import { TaskList } from 'components/blocks/TaskList';
 import { TaskFilters } from 'components/blocks/TaskFilters';
 import { useGetTasksQuery } from 'api/client';
 import { TaskFilterParams } from 'src/domain/task/task';
+import { ErrorSnackbar } from 'components/ui/ErrorSnackbar/ErrorSnackbar';
 
 export function TasksPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,7 +66,7 @@ export function TasksPage() {
         </Box>
       )}
 
-      {isError && <Typography variant="body1">Произошла ошибка при загрузке списка задач</Typography>}
+      {isError && <ErrorSnackbar message="Ошибка при загрузке списка задач" />}
 
       {!isLoading && !isError && <TaskList tasks={data ?? []} />}
 

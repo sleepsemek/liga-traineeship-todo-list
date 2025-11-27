@@ -8,6 +8,6 @@ export const taskFormSchema = yup
     isImportant: yup.boolean(),
     isCompleted: yup.boolean(),
   })
-  .test('important-not-completed', 'Нельзя отметить задачу важной, если она выполнена', (value) => {
-    return !(value.isCompleted && value.isImportant);
+  .test('important-not-completed', 'Нельзя отметить задачу важной, если она выполнена', (form) => {
+    return !form.isCompleted || !form.isImportant;
   });

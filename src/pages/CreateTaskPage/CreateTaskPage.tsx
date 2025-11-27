@@ -5,10 +5,11 @@ import { Task } from '../../domain/task/task';
 import { mapCreateTaskToRequest } from '../../domain/task';
 import { TaskForm } from 'components/blocks/TaskForm';
 import { useCreateTaskMutation } from 'api/client';
+import { ErrorSnackbar } from 'components/ui/ErrorSnackbar/ErrorSnackbar';
 
 export function CreateTaskPage() {
   const navigate = useNavigate();
-  const [createTask] = useCreateTaskMutation();
+  const [createTask, { isError, isLoading }] = useCreateTaskMutation();
 
   const handleSubmit = async (form: Partial<Task>) => {
     const body = mapCreateTaskToRequest({
@@ -35,7 +36,9 @@ export function CreateTaskPage() {
 
           <Typography variant="h1">Создание задачи</Typography>
 
-          <TaskForm initial={{}} submitLabel="Создать задачу" onSubmit={handleSubmit} />
+          <TaskForm initial={{}} submitLabel="Создать задачу" onSubmit={handleSubmit} isLoading={isLoading} />
+
+          {isError && <ErrorSnackbar message="Ошибка при создани задачи" />}
         </Stack>
       </CardContent>
     </Card>
