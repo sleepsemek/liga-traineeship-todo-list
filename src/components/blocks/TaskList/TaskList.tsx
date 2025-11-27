@@ -4,7 +4,7 @@ import { TaskItem } from 'components/blocks/TaskItem/TaskItem';
 
 export function TaskList({ tasks }: TaskListProps) {
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} direction="column-reverse">
       {tasks.length === 0 && (
         <Typography component="h3" variant="h6" align="center">
           Тут ничего нет

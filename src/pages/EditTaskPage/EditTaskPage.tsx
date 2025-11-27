@@ -1,4 +1,4 @@
-import { Stack, Typography, IconButton, Card, CardContent } from '@mui/material';
+import { Stack, Typography, IconButton, Card, CardContent, Skeleton } from '@mui/material';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEditTaskMutation, useGetTaskQuery } from 'api/client';
@@ -18,7 +18,19 @@ export function EditTaskPage() {
   const [editTask, { isError: isEditError, isLoading: isEditLoading }] = useEditTaskMutation();
 
   if (isFetchLoading) {
-    return null; //TODO: fix
+    return (
+      <Card variant="outlined">
+        <CardContent>
+          <Stack spacing={2}>
+            <Skeleton variant="rounded" width={50} height={50} />
+            <Skeleton variant="text" height={50} />
+            <Skeleton variant="rectangular" height={50} />
+            <Skeleton variant="rectangular" height={120} />
+            <Skeleton variant="rounded" height={40} width={100} />
+          </Stack>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (isFetchError || !data) {
@@ -51,12 +63,7 @@ export function EditTaskPage() {
 
           <Typography variant="h1">Редактирование задачи</Typography>
 
-          <TaskForm
-            initial={data}
-            submitLabel="Обновить"
-            onSubmit={handleSubmit}
-            isLoading={isFetchLoading || isEditLoading}
-          />
+          <TaskForm initial={data} submitLabel="Обновить" onSubmit={handleSubmit} isLoading={isEditLoading} />
         </Stack>
       </CardContent>
       {isEditError && <ErrorSnackbar message="Ошибка при изменении задачи" />}
